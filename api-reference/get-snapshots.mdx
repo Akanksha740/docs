@@ -1,0 +1,148 @@
+---
+title: Get Snapshots
+api: "GET /v1/markets/{slug}/snapshots"
+description: "Get time-series snapshots for a market"
+---
+
+# Get Snapshots
+
+Returns the market details along with its time-series snapshots, including price data and optional order book depth.
+
+## Request
+
+```
+GET https://api.polyhistorical.com/v1/markets/{slug}/snapshots
+```
+
+### Path parameters
+
+<ParamField path="slug" type="string" required>
+  The market slug, e.g. `btc-updown-5m-1774581000`
+</ParamField>
+
+### Query parameters
+
+<ParamField query="coin" type="string" required>
+  Cryptocurrency to query. Supported: `BTC`, `ETH`, `SOL`
+</ParamField>
+
+<ParamField query="limit" type="integer" default="100">
+  Number of snapshots to return (1-100)
+</ParamField>
+
+<ParamField query="offset" type="integer" default="0">
+  Pagination offset
+</ParamField>
+
+<ParamField query="include_orderbook" type="boolean" default="false">
+  Include full order book data (bids and asks) in each snapshot. Set to `false` for lower latency.
+</ParamField>
+
+## Response
+
+<ResponseField name="market" type="object">
+  The market object (same as [Get Market](/api-reference/get-market))
+</ResponseField>
+
+<ResponseField name="snapshots" type="array">
+  Array of snapshot objects, each containing:
+  - `time` (string) -- Snapshot timestamp (ISO 8601)
+  - `btc_price` (number) -- BTC price at snapshot time
+  - `price_up` (number) -- Price of the "Up" outcome (0-1)
+  - `price_down` (number) -- Price of the "Down" outcome (0-1)
+  - `orderbook_up` (object, optional) -- Order book for "Up" outcome
+  - `orderbook_down` (object, optional) -- Order book for "Down" outcome
+</ResponseField>
+
+<ResponseField name="total" type="integer">
+  Total number of snapshots available
+</ResponseField>
+
+## Examples
+
+### Get snapshots without order book (faster)
+
+<CodeGroup>
+
+```bash cURL
+curl -H "X-API-Key: YOUR_API_KEY" \
+  "https://api.polyhistorical.com/v1/markets/btc-updown-5m-1774581000/snapshots?coin=BTC&limit=10"
+```
+
+```python Python
+response = requests.get(
+    f"https://api.polyhistorical.com/v1/markets/{slug}/snapshots",
+    params={"coin": "BTC", "limit": 10},
+    headers={"X-API-Key": API_KEY}
+)
+```
+
+</CodeGroup>
+
+### Get snapshots with full order book
+
+<CodeGroup>
+
+```bash cURL
+curl -H "X-API-Key: YOUR_API_KEY" \
+  "https://api.polyhistorical.com/v1/markets/btc-updown-5m-1774581000/snapshots?coin=BTC&limit=10&include_orderbook=true"
+```
+
+```python Python
+response = requests.get(
+    f"https://api.polyhistorical.com/v1/markets/{slug}/snapshots",
+    params={"coin": "BTC", "limit": 10, "include_orderbook": True},
+    headers={"X-API-Key": API_KEY}
+)
+```
+
+</CodeGroup>
+
+### Response
+
+```json
+{
+  "market": {
+    "slug": "btc-updown-5m-1774581000",
+    "coin": "BTC",
+    "market_type": "5m",
+    "start_time": "2026-03-27T03:10:00Z",
+    "end_time": "2026-03-27T03:15:00Z"
+  },
+  "snapshots": [
+    {
+      "time": "2026-03-27T03:10:05Z",
+      "btc_price": 87234.50,
+      "price_up": 0.52,
+      "price_down": 0.48,
+      "orderbook_up": {
+        "bids": [
+          {"price": "0.51", "size": "1500"},
+          {"price": "0.50", "size": "3200"}
+        ],
+        "asks": [
+          {"price": "0.53", "size": "1200"},
+          {"price": "0.54", "size": "2800"}
+        ]
+      },
+      "orderbook_down": {
+        "bids": [
+          {"price": "0.47", "size": "1400"},
+          {"price": "0.46", "size": "2900"}
+        ],
+        "asks": [
+          {"price": "0.49", "size": "1100"},
+          {"price": "0.50", "size": "2600"}
+        ]
+      }
+    }
+  ],
+  "total": 45,
+  "limit": 10,
+  "offset": 0
+}
+```
+
+<Tip>
+  Set `include_orderbook=false` (default) for significantly lower latency and smaller response sizes when you only need price data.
+</Tip>

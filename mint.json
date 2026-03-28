@@ -1,0 +1,74 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "PolyHistorical",
+  "logo": {
+    "dark": "/logo/dark.svg",
+    "light": "/logo/light.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#6c63ff",
+    "light": "#8b83ff",
+    "dark": "#6c63ff",
+    "anchors": {
+      "from": "#6c63ff",
+      "to": "#4ecdc4"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Dashboard",
+      "url": "https://polyhistorical.com/dashboard"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Get API Key",
+    "url": "https://polyhistorical.com/signup"
+  },
+  "anchors": [
+    {
+      "name": "API Status",
+      "icon": "signal",
+      "url": "https://api.polyhistorical.com/actuator/health"
+    },
+    {
+      "name": "Community",
+      "icon": "envelope",
+      "url": "mailto:enterprise@polyhistorical.com"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": [
+        "introduction",
+        "authentication",
+        "quickstart"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api-reference/overview",
+        "api-reference/list-markets",
+        "api-reference/get-market",
+        "api-reference/get-snapshots"
+      ]
+    },
+    {
+      "group": "Guides",
+      "pages": [
+        "guides/rate-limits",
+        "guides/pricing",
+        "guides/webhooks",
+        "guides/errors"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "website": "https://polyhistorical.com"
+  },
+  "api": {
+    "baseUrl": "https://api.polyhistorical.com"
+  }
+}

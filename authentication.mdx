@@ -1,0 +1,71 @@
+---
+title: Authentication
+description: "How to authenticate with the PolyHistorical API"
+---
+
+# Authentication
+
+All API requests require an API key. Include your key in the `X-API-Key` header with every request.
+
+## Getting your API key
+
+1. [Create an account](https://polyhistorical.com/signup) (free, no credit card required)
+2. Verify your email
+3. Go to your [Dashboard](https://polyhistorical.com/dashboard) and navigate to **API Keys**
+4. Click **Create New Key** and give it a name
+5. Copy the key immediately -- it won't be shown again
+
+## Using your API key
+
+Include the key in the `X-API-Key` header:
+
+<CodeGroup>
+
+```bash cURL
+curl -H "X-API-Key: nb_your_api_key_here" \
+  "https://api.polyhistorical.com/v1/markets?coin=BTC&limit=5"
+```
+
+```python Python
+import requests
+
+headers = {"X-API-Key": "nb_your_api_key_here"}
+response = requests.get(
+    "https://api.polyhistorical.com/v1/markets",
+    params={"coin": "BTC", "limit": 5},
+    headers=headers
+)
+print(response.json())
+```
+
+```javascript JavaScript
+const headers = { "X-API-Key": "nb_your_api_key_here" };
+
+const response = await fetch(
+  "https://api.polyhistorical.com/v1/markets?coin=BTC&limit=5",
+  { headers }
+);
+const data = await response.json();
+console.log(data);
+```
+
+</CodeGroup>
+
+## API key limits by plan
+
+| Plan | Max API Keys |
+|------|-------------|
+| Starter (Free) | 1 |
+| Pro | 3 |
+| Enterprise | 33 |
+
+## Security best practices
+
+<Warning>
+  Never expose your API key in client-side code, public repositories, or browser requests. Always call the API from your backend server.
+</Warning>
+
+- Store keys in environment variables, not in code
+- Use different keys for development and production
+- Rotate keys periodically
+- Revoke unused keys from your dashboard

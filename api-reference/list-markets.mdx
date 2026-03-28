@@ -1,0 +1,119 @@
+---
+title: List Markets
+api: "GET /v1/markets"
+description: "List all markets with filtering and pagination"
+---
+
+# List Markets
+
+Returns markets sorted by `start_time` descending (newest first).
+
+## Request
+
+```
+GET https://api.polyhistorical.com/v1/markets
+```
+
+### Query parameters
+
+<ParamField query="coin" type="string" required>
+  Cryptocurrency to query. Supported: `BTC`, `ETH`, `SOL`
+</ParamField>
+
+<ParamField query="limit" type="integer" default="50">
+  Number of results to return (1-100)
+</ParamField>
+
+<ParamField query="offset" type="integer" default="0">
+  Pagination offset
+</ParamField>
+
+<ParamField query="market_type" type="string">
+  Filter by market type: `5m`, `15m`, `1hr`, `4hr`, `24hr`
+</ParamField>
+
+<ParamField query="resolved" type="boolean">
+  Filter by resolution status. `false` for active markets, `true` for resolved.
+</ParamField>
+
+<ParamField query="start_time" type="string">
+  Filter markets starting after this time. Accepts epoch milliseconds or ISO 8601.
+</ParamField>
+
+<ParamField query="end_time" type="string">
+  Filter markets starting before this time. Accepts epoch milliseconds or ISO 8601.
+</ParamField>
+
+## Response
+
+<ResponseField name="markets" type="array">
+  Array of market objects
+</ResponseField>
+
+<ResponseField name="total" type="integer">
+  Total number of markets matching the filter
+</ResponseField>
+
+<ResponseField name="limit" type="integer">
+  Number of results returned
+</ResponseField>
+
+<ResponseField name="offset" type="integer">
+  Current pagination offset
+</ResponseField>
+
+## Examples
+
+### Get active 5-minute BTC markets
+
+<CodeGroup>
+
+```bash cURL
+curl -H "X-API-Key: YOUR_API_KEY" \
+  "https://api.polyhistorical.com/v1/markets?coin=BTC&market_type=5m&resolved=false&limit=10"
+```
+
+```python Python
+response = requests.get(
+    "https://api.polyhistorical.com/v1/markets",
+    params={"coin": "BTC", "market_type": "5m", "resolved": False, "limit": 10},
+    headers={"X-API-Key": API_KEY}
+)
+```
+
+</CodeGroup>
+
+### Response
+
+```json
+{
+  "markets": [
+    {
+      "slug": "btc-updown-5m-1774581000",
+      "coin": "BTC",
+      "market_type": "5m",
+      "market_id": "1724470",
+      "event_id": "308810",
+      "active": true,
+      "resolved": false,
+      "start_time": "2026-03-27T03:10:00Z",
+      "end_time": "2026-03-27T03:15:00Z",
+      "btc_price_start": null,
+      "winner": null,
+      "final_volume": null,
+      "resolved_at": null
+    }
+  ],
+  "total": 1462,
+  "limit": 10,
+  "offset": 0
+}
+```
+
+### Market access limits by plan
+
+| Plan | BTC 5m & 15m | BTC 1h & 4h | BTC 24h |
+|------|-------------|-------------|---------|
+| Starter (Free) | Last 50 | Last 24 | Last 5 |
+| Pro | All | All | All |
+| Enterprise | All | All | All |

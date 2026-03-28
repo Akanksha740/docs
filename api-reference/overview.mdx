@@ -1,0 +1,78 @@
+---
+title: Overview
+description: "API Reference overview and conventions"
+---
+
+# API Reference
+
+Base URL for all API requests:
+
+```
+https://api.polyhistorical.com/v1
+```
+
+## Authentication
+
+All endpoints require an API key passed in the `X-API-Key` header. See [Authentication](/authentication) for details.
+
+## Request format
+
+- All requests use standard query parameters
+- Responses are JSON
+- Timestamps are ISO 8601 format (UTC)
+- Pagination uses `limit` and `offset` parameters
+
+## Response format
+
+All responses follow this structure:
+
+**Success (market endpoints):**
+```json
+{
+  "markets": [...],
+  "total": 1462,
+  "limit": 50,
+  "offset": 0
+}
+```
+
+**Success (account endpoints):**
+```json
+{
+  "success": true,
+  "data": { ... },
+  "message": "Optional message",
+  "timestamp": "2026-03-27T12:00:00Z"
+}
+```
+
+**Error:**
+```json
+{
+  "success": false,
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Human-readable error description"
+  },
+  "timestamp": "2026-03-27T12:00:00Z"
+}
+```
+
+## Common error codes
+
+| Code | HTTP Status | Description |
+|------|------------|-------------|
+| `VALIDATION_ERROR` | 400 | Invalid request parameters |
+| `UNAUTHORIZED` | 401 | Missing or invalid API key |
+| `TIER_ACCESS_DENIED` | 403 | Feature requires a higher plan |
+| `RESOURCE_NOT_FOUND` | 404 | Market or resource not found |
+| `RATE_LIMIT_EXCEEDED` | 429 | Too many requests |
+| `INTERNAL_ERROR` | 500 | Server error |
+
+## Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/v1/markets` | [List markets](/api-reference/list-markets) with filtering and pagination |
+| `GET` | `/v1/markets/{slug}` | [Get a single market](/api-reference/get-market) by slug |
+| `GET` | `/v1/markets/{slug}/snapshots` | [Get snapshots](/api-reference/get-snapshots) for a market |

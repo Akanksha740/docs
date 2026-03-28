@@ -1,0 +1,135 @@
+---
+title: Quickstart
+description: "Make your first API call in under a minute"
+---
+
+# Quickstart
+
+Get up and running with PolyHistorical in three steps.
+
+## Step 1: Get your API key
+
+[Sign up](https://polyhistorical.com/signup) and create an API key from your dashboard.
+
+## Step 2: List active markets
+
+Fetch the latest active BTC prediction markets:
+
+<CodeGroup>
+
+```bash cURL
+curl -H "X-API-Key: YOUR_API_KEY" \
+  "https://api.polyhistorical.com/v1/markets?coin=BTC&resolved=false&limit=5"
+```
+
+```python Python
+import requests
+
+API_KEY = "YOUR_API_KEY"
+headers = {"X-API-Key": API_KEY}
+
+response = requests.get(
+    "https://api.polyhistorical.com/v1/markets",
+    params={"coin": "BTC", "resolved": False, "limit": 5},
+    headers=headers
+)
+
+markets = response.json()
+for market in markets["markets"]:
+    print(f"{market['slug']} | {market['market_type']} | active={market['active']}")
+```
+
+```javascript JavaScript
+const API_KEY = "YOUR_API_KEY";
+
+const res = await fetch(
+  "https://api.polyhistorical.com/v1/markets?coin=BTC&resolved=false&limit=5",
+  { headers: { "X-API-Key": API_KEY } }
+);
+
+const { markets } = await res.json();
+markets.forEach(m => console.log(`${m.slug} | ${m.market_type}`));
+```
+
+</CodeGroup>
+
+## Step 3: Get snapshots for a market
+
+Pick a market slug from the previous response and fetch its snapshots:
+
+<CodeGroup>
+
+```bash cURL
+curl -H "X-API-Key: YOUR_API_KEY" \
+  "https://api.polyhistorical.com/v1/markets/btc-updown-5m-1774581000/snapshots?coin=BTC&limit=10"
+```
+
+```python Python
+slug = "btc-updown-5m-1774581000"
+response = requests.get(
+    f"https://api.polyhistorical.com/v1/markets/{slug}/snapshots",
+    params={"coin": "BTC", "limit": 10, "include_orderbook": True},
+    headers=headers
+)
+
+data = response.json()
+for snap in data["snapshots"]:
+    print(f"{snap['time']} | BTC: ${snap['btc_price']} | Up: {snap['price_up']} | Down: {snap['price_down']}")
+```
+
+```javascript JavaScript
+const slug = "btc-updown-5m-1774581000";
+const res = await fetch(
+  `https://api.polyhistorical.com/v1/markets/${slug}/snapshots?coin=BTC&limit=10&include_orderbook=true`,
+  { headers: { "X-API-Key": API_KEY } }
+);
+
+const { snapshots } = await res.json();
+snapshots.forEach(s =>
+  console.log(`${s.time} | BTC: $${s.btc_price} | Up: ${s.price_up} | Down: ${s.price_down}`)
+);
+```
+
+</CodeGroup>
+
+## Example response
+
+```json
+{
+  "market": {
+    "slug": "btc-updown-5m-1774581000",
+    "coin": "BTC",
+    "market_type": "5m",
+    "active": true,
+    "resolved": false,
+    "start_time": "2026-03-27T03:10:00Z",
+    "end_time": "2026-03-27T03:15:00Z"
+  },
+  "snapshots": [
+    {
+      "time": "2026-03-27T03:10:05Z",
+      "btc_price": 87234.50,
+      "price_up": 0.52,
+      "price_down": 0.48,
+      "orderbook_up": {
+        "bids": [{"price": "0.51", "size": "1500"}],
+        "asks": [{"price": "0.53", "size": "1200"}]
+      }
+    }
+  ],
+  "total": 1,
+  "limit": 10,
+  "offset": 0
+}
+```
+
+## What's next?
+
+<CardGroup cols={2}>
+  <Card title="API Reference" icon="book" href="/api-reference/overview">
+    Explore all available endpoints, parameters, and response formats.
+  </Card>
+  <Card title="Rate Limits" icon="gauge" href="/guides/rate-limits">
+    Understand request limits and how to handle 429 responses.
+  </Card>
+</CardGroup>

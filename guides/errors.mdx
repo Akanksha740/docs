@@ -1,0 +1,102 @@
+---
+title: Error Handling
+description: "API error codes and how to handle them"
+---
+
+# Error Handling
+
+The API uses standard HTTP status codes and returns structured error responses.
+
+## Error response format
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human-readable description"
+  },
+  "timestamp": "2026-03-27T12:00:00Z"
+}
+```
+
+## Error codes
+
+### 400 Bad Request
+
+| Code | Description | Fix |
+|------|-------------|-----|
+| `VALIDATION_ERROR` | Invalid parameters | Check required params like `coin` |
+
+```bash
+# Missing required 'coin' parameter
+curl -H "X-API-Key: KEY" "https://api.polyhistorical.com/v1/markets"
+# => 400: "coin parameter is required"
+```
+
+### 401 Unauthorized
+
+| Code | Description | Fix |
+|------|-------------|-----|
+| `UNAUTHORIZED` | Missing or invalid API key | Check your `X-API-Key` header |
+
+### 403 Forbidden
+
+| Code | Description | Fix |
+|------|-------------|-----|
+| `TIER_ACCESS_DENIED` | Feature requires higher plan | Upgrade at [polyhistorical.com/pricing](https://polyhistorical.com/pricing) |
+
+The response includes upgrade details:
+
+```json
+{
+  "error": {
+    "code": "TIER_ACCESS_DENIED",
+    "message": "Your STARTER plan only allows access to the last 7 days of data. Upgrade to PRO for extended history.",
+    "details": {
+      "required_tier": "PRO",
+      "current_tier": "STARTER",
+      "upgrade_url": "/v1/account/billing"
+    }
+  }
+}
+```
+
+### 404 Not Found
+
+| Code | Description | Fix |
+|------|-------------|-----|
+| `RESOURCE_NOT_FOUND` | Market not found | Verify the slug exists via list markets |
+
+### 429 Too Many Requests
+
+| Code | Description | Fix |
+|------|-------------|-----|
+| `RATE_LIMIT_EXCEEDED` | Daily limit exceeded | Wait for reset or upgrade plan |
+
+Response includes `Retry-After` header (seconds until reset).
+
+See [Rate Limits](/guides/rate-limits) for details.
+
+### 500 Internal Server Error
+
+| Code | Description | Fix |
+|------|-------------|-----|
+| `INTERNAL_ERROR` | Unexpected server error | Retry after a moment. If persistent, contact support. |
+
+## Best practices
+
+<Steps>
+  <Step title="Check status codes first">
+    Use the HTTP status code to determine the error category before parsing the body.
+  </Step>
+  <Step title="Read the error message">
+    The `message` field contains actionable information about what went wrong.
+  </Step>
+  <Step title="Implement retries for 429 and 5xx">
+    Use exponential backoff. Respect the `Retry-After` header for 429 responses.
+  </Step>
+  <Step title="Don't retry 400/401/403">
+    These are client errors that won't resolve on retry. Fix the request instead.
+  </Step>
+</Steps>

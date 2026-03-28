@@ -1,0 +1,62 @@
+---
+title: Rate Limits
+description: "Understanding API rate limits and how to handle them"
+---
+
+# Rate Limits
+
+API rate limits vary by plan. Limits are enforced on a per-day basis and reset at midnight UTC.
+
+## Limits by plan
+
+| Plan | Requests/min | Requests/day |
+|------|-------------|-------------|
+| Starter (Free) | 60 | 1,000 |
+| Pro | 300 | 50,000 |
+| Enterprise | Custom | Unlimited |
+
+## Rate limit headers
+
+Every API response includes rate limit headers:
+
+| Header | Description |
+|--------|-------------|
+| `X-RateLimit-Limit` | Your daily request limit |
+| `X-RateLimit-Remaining` | Requests remaining today |
+| `X-RateLimit-Reset` | Unix timestamp when the limit resets (midnight UTC) |
+| `X-Tier` | Your current plan tier |
+
+## Handling 429 responses
+
+When you exceed the rate limit, the API returns a `429 Too Many Requests` status with a `Retry-After` header.
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "RATE_LIMIT_EXCEEDED",
+    "message": "Daily request limit exceeded. Upgrade your plan for higher limits."
+  }
+}
+```
+
+### Best practices
+
+<AccordionGroup>
+  <Accordion title="Respect the Retry-After header">
+    The `Retry-After` header tells you how many seconds to wait before retrying. Implement exponential backoff.
+  </Accordion>
+  <Accordion title="Cache responses">
+    Market data doesn't change between snapshots. Cache responses for the snapshot interval (e.g., 5 minutes for 5m markets).
+  </Accordion>
+  <Accordion title="Use pagination wisely">
+    Fetch only the data you need. Use `limit` and `offset` to paginate through large result sets.
+  </Accordion>
+  <Accordion title="Monitor your usage">
+    Check your usage in the [Dashboard](https://polyhistorical.com/dashboard) or read the rate limit headers.
+  </Accordion>
+</AccordionGroup>
+
+## Need higher limits?
+
+[Upgrade to Pro](https://polyhistorical.com/pricing) for 50x more daily requests, or [contact us](mailto:enterprise@polyhistorical.com) for custom Enterprise limits.

@@ -1,0 +1,84 @@
+---
+title: Get Market
+api: "GET /v1/markets/{slug}"
+description: "Get a single market by its slug"
+---
+
+# Get Market
+
+Returns detailed data for a single market identified by its slug.
+
+## Request
+
+```
+GET https://api.polyhistorical.com/v1/markets/{slug}
+```
+
+### Path parameters
+
+<ParamField path="slug" type="string" required>
+  The market slug, e.g. `btc-updown-5m-1774581000`
+</ParamField>
+
+### Query parameters
+
+<ParamField query="coin" type="string" required>
+  Cryptocurrency to query. Supported: `BTC`, `ETH`, `SOL`
+</ParamField>
+
+## Response
+
+Returns a single market object.
+
+<ResponseField name="slug" type="string">Market slug identifier</ResponseField>
+<ResponseField name="coin" type="string">Cryptocurrency (BTC, ETH, SOL)</ResponseField>
+<ResponseField name="market_type" type="string">Market interval (5m, 15m, 1hr, 4hr, 24hr)</ResponseField>
+<ResponseField name="market_id" type="string">External market ID</ResponseField>
+<ResponseField name="event_id" type="string">External event ID</ResponseField>
+<ResponseField name="active" type="boolean">Whether the market is currently active</ResponseField>
+<ResponseField name="resolved" type="boolean">Whether the market has been resolved</ResponseField>
+<ResponseField name="start_time" type="string">Market start time (ISO 8601)</ResponseField>
+<ResponseField name="end_time" type="string">Market end time (ISO 8601)</ResponseField>
+<ResponseField name="btc_price_start" type="number">BTC price at market start (null if not yet recorded)</ResponseField>
+<ResponseField name="winner" type="string">Winning outcome (null if unresolved)</ResponseField>
+<ResponseField name="final_volume" type="number">Final trading volume (null if unresolved)</ResponseField>
+<ResponseField name="resolved_at" type="string">Resolution timestamp (null if unresolved)</ResponseField>
+
+## Example
+
+<CodeGroup>
+
+```bash cURL
+curl -H "X-API-Key: YOUR_API_KEY" \
+  "https://api.polyhistorical.com/v1/markets/btc-updown-5m-1774581000?coin=BTC"
+```
+
+```python Python
+response = requests.get(
+    "https://api.polyhistorical.com/v1/markets/btc-updown-5m-1774581000",
+    params={"coin": "BTC"},
+    headers={"X-API-Key": API_KEY}
+)
+```
+
+</CodeGroup>
+
+### Response
+
+```json
+{
+  "slug": "btc-updown-5m-1774581000",
+  "coin": "BTC",
+  "market_type": "5m",
+  "market_id": "1724470",
+  "event_id": "308810",
+  "active": true,
+  "resolved": false,
+  "start_time": "2026-03-27T03:10:00Z",
+  "end_time": "2026-03-27T03:15:00Z",
+  "btc_price_start": 87234.50,
+  "winner": null,
+  "final_volume": null,
+  "resolved_at": null
+}
+```

@@ -1,0 +1,57 @@
+---
+title: Webhooks
+description: "Subscription lifecycle events via webhooks"
+---
+
+# Webhooks
+
+PolyHistorical uses [Dodo Payments](https://dodopayments.com) for subscription billing. Webhook events are sent when subscription status changes.
+
+<Note>
+  Webhooks are used internally for subscription management. This page is for reference if you're integrating with the PolyHistorical billing system.
+</Note>
+
+## Events
+
+| Event | Description |
+|-------|-------------|
+| `subscription.active` | Subscription is active (payment confirmed) |
+| `subscription.cancelled` | Subscription was cancelled |
+| `payment.succeeded` | A payment was successfully processed |
+
+## Webhook endpoint
+
+```
+POST https://api.polyhistorical.com/v1/webhook/dodo
+```
+
+## Payload format
+
+```json
+{
+  "business_id": "bus_xxx",
+  "type": "subscription.active",
+  "timestamp": "2026-03-27T06:43:24Z",
+  "data": {
+    "subscription_id": "sub_xxx",
+    "status": "active",
+    "product_id": "pdt_xxx",
+    "customer": {
+      "email": "user@example.com",
+      "name": "User Name"
+    },
+    "metadata": {
+      "nebula_customer_id": "uuid",
+      "tier": "PRO"
+    },
+    "next_billing_date": "2026-04-27T06:43:24Z"
+  }
+}
+```
+
+## What happens on each event
+
+- **`subscription.active`**: Customer tier is upgraded to the tier specified in `metadata.tier`
+- **`subscription.cancelled`**: Customer tier is downgraded to Starter (free)
+
+Rate limit caches are cleared immediately on tier changes so new limits take effect without delay.
