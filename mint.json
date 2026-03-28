@@ -3,9 +3,13 @@
   "name": "PolyHistorical",
   "logo": {
     "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
+    "light": "/logo/light.svg",
+    "href": "https://polyhistorical.com"
   },
   "favicon": "/favicon.svg",
+  "sidebar": {
+    "items": "border"
+  },
   "colors": {
     "primary": "#10B981",
     "light": "#34D399",
