@@ -62,6 +62,26 @@ GET https://api.polyhistorical.com/v1/markets
   Current pagination offset
 </ResponseField>
 
+### Market object fields
+
+<ResponseField name="slug" type="string">Market slug identifier</ResponseField>
+<ResponseField name="market_id" type="string">External market ID</ResponseField>
+<ResponseField name="event_id" type="string">External event ID</ResponseField>
+<ResponseField name="market_type" type="string">Market interval (5m, 15m, 1hr, 4hr, 24hr)</ResponseField>
+<ResponseField name="start_time" type="string">Market start time (ISO 8601)</ResponseField>
+<ResponseField name="end_time" type="string">Market end time (ISO 8601)</ResponseField>
+<ResponseField name="btc_price_start" type="number">BTC price at market start (null if not yet recorded)</ResponseField>
+<ResponseField name="btc_price_end" type="number">BTC price at market end (null if unresolved)</ResponseField>
+<ResponseField name="condition_id" type="string">Polymarket condition ID</ResponseField>
+<ResponseField name="clob_token_up" type="string">CLOB token ID for the "Up" outcome</ResponseField>
+<ResponseField name="clob_token_down" type="string">CLOB token ID for the "Down" outcome</ResponseField>
+<ResponseField name="winner" type="string">Winning outcome (null if unresolved)</ResponseField>
+<ResponseField name="final_volume" type="number">Final trading volume (null if unresolved)</ResponseField>
+<ResponseField name="final_liquidity" type="number">Final liquidity (null if unresolved)</ResponseField>
+<ResponseField name="resolved_at" type="string">Resolution timestamp (null if unresolved)</ResponseField>
+<ResponseField name="created_at" type="string">Record creation timestamp</ResponseField>
+<ResponseField name="updated_at" type="string">Record last updated timestamp</ResponseField>
+
 ## Examples
 
 ### Get active 5-minute BTC markets
@@ -90,18 +110,22 @@ response = requests.get(
   "markets": [
     {
       "slug": "btc-updown-5m-1774581000",
-      "coin": "BTC",
-      "market_type": "5m",
       "market_id": "1724470",
       "event_id": "308810",
-      "active": true,
-      "resolved": false,
+      "market_type": "5m",
       "start_time": "2026-03-27T03:10:00Z",
       "end_time": "2026-03-27T03:15:00Z",
       "btc_price_start": null,
+      "btc_price_end": null,
+      "condition_id": "0xabc123",
+      "clob_token_up": "71321",
+      "clob_token_down": "71322",
       "winner": null,
       "final_volume": null,
-      "resolved_at": null
+      "final_liquidity": null,
+      "resolved_at": null,
+      "created_at": "2026-03-27T03:09:00Z",
+      "updated_at": "2026-03-27T03:09:00Z"
     }
   ],
   "total": 1462,
