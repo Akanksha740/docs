@@ -1,17 +1,21 @@
 ---
-title: Get Snapshots
-api: "GET /v1/markets/{slug}/snapshots"
-description: "Get time-series snapshots for a market"
+title: Get Snapshots by Market ID
+api: "GET /v1/markets/by-market-id/{marketId}/snapshots"
+description: "Get time-series snapshots for a market using its Polymarket market ID"
 ---
 
-# Get Snapshots
+# Get Snapshots by Market ID
 
-Returns the market details along with its time-series snapshots, including price data and optional order book depth.
+Returns the market details along with its time-series snapshots, including price data and optional order book depth. This endpoint is identical to [Get Snapshots](/api-reference/get-snapshots) but uses the Polymarket market ID instead of the slug.
+
+<Tip>
+  Use this endpoint when you have the Polymarket market ID (e.g. `1843290`) but not the slug. The response format is the same as the slug-based endpoint.
+</Tip>
 
 ## Request
 
 ```
-https://api.polyhistorical.com/v1/markets/{slug}/snapshots
+https://api.polyhistorical.com/v1/markets/by-market-id/{marketId}/snapshots
 ```
 
 ### Headers
@@ -22,8 +26,8 @@ https://api.polyhistorical.com/v1/markets/{slug}/snapshots
 
 ### Path parameters
 
-<ParamField path="slug" type="string" required>
-  The market slug, e.g. `btc-updown-5m-1774975800`
+<ParamField path="marketId" type="string" required>
+  The Polymarket market ID, e.g. `1843290`
 </ParamField>
 
 ### Query parameters
@@ -68,12 +72,12 @@ https://api.polyhistorical.com/v1/markets/{slug}/snapshots
 
 ```bash cURL
 curl -H "X-API-Key: YOUR_API_KEY" \
-  "https://api.polyhistorical.com/v1/markets/btc-updown-5m-1774975800/snapshots?limit=10"
+  "https://api.polyhistorical.com/v1/markets/by-market-id/1843290/snapshots?limit=10"
 ```
 
 ```python Python
 response = requests.get(
-    f"https://api.polyhistorical.com/v1/markets/{slug}/snapshots",
+    f"https://api.polyhistorical.com/v1/markets/by-market-id/{market_id}/snapshots",
     params={"limit": 10},
     headers={"X-API-Key": API_KEY}
 )
@@ -87,12 +91,12 @@ response = requests.get(
 
 ```bash cURL
 curl -H "X-API-Key: YOUR_API_KEY" \
-  "https://api.polyhistorical.com/v1/markets/btc-updown-5m-1774975800/snapshots?limit=10&include_orderbook=true"
+  "https://api.polyhistorical.com/v1/markets/by-market-id/1843290/snapshots?limit=10&include_orderbook=true"
 ```
 
 ```python Python
 response = requests.get(
-    f"https://api.polyhistorical.com/v1/markets/{slug}/snapshots",
+    f"https://api.polyhistorical.com/v1/markets/by-market-id/{market_id}/snapshots",
     params={"limit": 10, "include_orderbook": True},
     headers={"X-API-Key": API_KEY}
 )
@@ -107,7 +111,7 @@ response = requests.get(
   "market": {
     "slug": "btc-updown-5m-1774975800",
     "winner": "Down",
-    "market_id": "1793728",
+    "market_id": "1843290",
     "event_id": "325933",
     "market_type": "5m",
     "start_time": "2026-03-31T16:50:00Z",
@@ -135,12 +139,7 @@ response = requests.get(
           { "size": 2081.11, "price": 0.98 },
           { "size": 798.23, "price": 0.97 },
           { "size": 2604.0, "price": 0.96 },
-          { "size": 335.0, "price": 0.95 },
-          { "size": 470.0, "price": 0.94 },
-          { "size": 2725.25, "price": 0.93 },
-          { "size": 55.0, "price": 0.92 },
-          { "size": 81.5, "price": 0.91 },
-          { "size": 130.04, "price": 0.9 }
+          { "size": 335.0, "price": 0.95 }
         ],
         "bids": []
       },
@@ -151,48 +150,7 @@ response = requests.get(
           { "size": 2081.11, "price": 0.02 },
           { "size": 798.23, "price": 0.03 },
           { "size": 2604.0, "price": 0.04 },
-          { "size": 335.0, "price": 0.05 },
-          { "size": 470.0, "price": 0.06 },
-          { "size": 2725.25, "price": 0.07 },
-          { "size": 55.0, "price": 0.08 },
-          { "size": 81.5, "price": 0.09 },
-          { "size": 130.04, "price": 0.1 }
-        ]
-      }
-    },
-    {
-      "time": "2026-03-31T16:54:59.464320Z",
-      "coin_price": 67673.18,
-      "price_up": 0.455,
-      "price_down": 0.545,
-      "orderbook_up": {
-        "asks": [
-          { "size": 3488.68, "price": 0.99 },
-          { "size": 2081.11, "price": 0.98 },
-          { "size": 798.23, "price": 0.97 },
-          { "size": 104.0, "price": 0.96 },
-          { "size": 335.0, "price": 0.95 },
-          { "size": 470.0, "price": 0.94 },
-          { "size": 475.25, "price": 0.93 },
-          { "size": 55.0, "price": 0.92 },
-          { "size": 81.5, "price": 0.91 },
-          { "size": 90.04, "price": 0.9 }
-        ],
-        "bids": []
-      },
-      "orderbook_down": {
-        "asks": [],
-        "bids": [
-          { "size": 3488.68, "price": 0.01 },
-          { "size": 2081.11, "price": 0.02 },
-          { "size": 798.23, "price": 0.03 },
-          { "size": 104.0, "price": 0.04 },
-          { "size": 335.0, "price": 0.05 },
-          { "size": 470.0, "price": 0.06 },
-          { "size": 475.25, "price": 0.07 },
-          { "size": 55.0, "price": 0.08 },
-          { "size": 81.5, "price": 0.09 },
-          { "size": 90.04, "price": 0.1 }
+          { "size": 335.0, "price": 0.05 }
         ]
       }
     }
@@ -204,7 +162,7 @@ response = requests.get(
 ```
 
 <Note>
-  Response truncated — 10 snapshots are returned with `limit=10`. Each snapshot includes full order book data when `include_orderbook=true`.
+  Response truncated -- 10 snapshots are returned with `limit=10`. Each snapshot includes full order book data when `include_orderbook=true`.
 </Note>
 
 <Tip>

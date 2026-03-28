@@ -30,7 +30,7 @@
   ],
   "topbarCtaButton": {
     "name": "Get API Key",
-    "url": "https://polyhistorical.com/signup"
+    "url": "https://polyhistorical.com/dashboard?tab=api-keys"
   },
   "anchors": [
     {
@@ -59,7 +59,8 @@
         "api-reference/overview",
         "api-reference/list-markets",
         "api-reference/get-market",
-        "api-reference/get-snapshots"
+        "api-reference/get-snapshots",
+        "api-reference/get-snapshots-by-market-id"
       ]
     },
     {
@@ -67,7 +68,6 @@
       "pages": [
         "guides/rate-limits",
         "guides/pricing",
-        "guides/webhooks",
         "guides/errors"
       ]
     }

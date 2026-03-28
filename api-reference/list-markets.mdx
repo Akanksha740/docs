@@ -11,8 +11,14 @@ Returns markets sorted by `start_time` descending (newest first).
 ## Request
 
 ```
-GET https://api.polyhistorical.com/v1/markets
+https://api.polyhistorical.com/v1/markets
 ```
+
+### Headers
+
+<ParamField header="X-API-Key" type="string" required>
+  Your API key. See [Authentication](/api-reference/overview#authentication).
+</ParamField>
 
 ### Query parameters
 
@@ -20,7 +26,7 @@ GET https://api.polyhistorical.com/v1/markets
   Cryptocurrency to query. Supported: `BTC`, `ETH`, `SOL`
 </ParamField>
 
-<ParamField query="limit" type="integer" default="50">
+<ParamField query="limit" type="integer" default="100">
   Number of results to return (1-100)
 </ParamField>
 
@@ -29,7 +35,7 @@ GET https://api.polyhistorical.com/v1/markets
 </ParamField>
 
 <ParamField query="market_type" type="string">
-  Filter by market type: `5m`, `15m`, `1hr`, `4hr`, `24hr`
+  Filter by market type: `5m`, `15m`, `1hr` (all coins), `4hr`, `24hr` (BTC only)
 </ParamField>
 
 <ParamField query="resolved" type="boolean">
@@ -62,16 +68,20 @@ GET https://api.polyhistorical.com/v1/markets
   Current pagination offset
 </ResponseField>
 
+<ResponseField name="warning" type="string">
+  Warning message if applicable (null otherwise)
+</ResponseField>
+
 ### Market object fields
 
 <ResponseField name="slug" type="string">Market slug identifier</ResponseField>
 <ResponseField name="market_id" type="string">External market ID</ResponseField>
 <ResponseField name="event_id" type="string">External event ID</ResponseField>
-<ResponseField name="market_type" type="string">Market interval (5m, 15m, 1hr, 4hr, 24hr)</ResponseField>
+<ResponseField name="market_type" type="string">Market interval — 5m, 15m, 1hr (all coins), 4hr, 24hr (BTC only)</ResponseField>
 <ResponseField name="start_time" type="string">Market start time (ISO 8601)</ResponseField>
 <ResponseField name="end_time" type="string">Market end time (ISO 8601)</ResponseField>
-<ResponseField name="btc_price_start" type="number">BTC price at market start (null if not yet recorded)</ResponseField>
-<ResponseField name="btc_price_end" type="number">BTC price at market end (null if unresolved)</ResponseField>
+<ResponseField name="coin_price_start" type="number">Coin price at market start (null if not yet recorded)</ResponseField>
+<ResponseField name="coin_price_end" type="number">Coin price at market end (null if unresolved)</ResponseField>
 <ResponseField name="condition_id" type="string">Polymarket condition ID</ResponseField>
 <ResponseField name="clob_token_up" type="string">CLOB token ID for the "Up" outcome</ResponseField>
 <ResponseField name="clob_token_down" type="string">CLOB token ID for the "Down" outcome</ResponseField>
@@ -109,35 +119,36 @@ response = requests.get(
 {
   "markets": [
     {
-      "slug": "btc-updown-5m-1774581000",
-      "market_id": "1724470",
-      "event_id": "308810",
+      "slug": "btc-updown-5m-1774975800",
+      "winner": "Down",
+      "market_id": "1793728",
+      "event_id": "325933",
       "market_type": "5m",
-      "start_time": "2026-03-27T03:10:00Z",
-      "end_time": "2026-03-27T03:15:00Z",
-      "btc_price_start": null,
-      "btc_price_end": null,
-      "condition_id": "0xabc123",
-      "clob_token_up": "71321",
-      "clob_token_down": "71322",
-      "winner": null,
-      "final_volume": null,
-      "final_liquidity": null,
-      "resolved_at": null,
-      "created_at": "2026-03-27T03:09:00Z",
-      "updated_at": "2026-03-27T03:09:00Z"
+      "start_time": "2026-03-31T16:50:00Z",
+      "end_time": "2026-03-31T16:55:00Z",
+      "coin_price_start": 67701.82777476,
+      "condition_id": "0x740cfdbafa8d1b1d51729da79b05e641158d3a7c889175dab1eab20a2c92b5cc",
+      "clob_token_up": "83511279567738325562016865404511480598726292757090195771777541218161914729159",
+      "clob_token_down": "66091509674921971407227514952521456996907573303653223323107401767726760115252",
+      "final_volume": 202849.44,
+      "final_liquidity": 12435.04,
+      "coin_price_end": 67611.61304387,
+      "resolved_at": "2026-03-31T16:55:25Z",
+      "created_at": "2026-03-31T16:50:00.943587Z",
+      "updated_at": "2026-03-31T17:21:20.768590Z"
     }
   ],
-  "total": 1462,
-  "limit": 10,
-  "offset": 0
+  "total": 2289,
+  "limit": 50,
+  "offset": 0,
+  "warning": null
 }
 ```
 
 ### Market access limits by plan
 
-| Plan | BTC 5m & 15m | BTC 1h & 4h | BTC 24h |
-|------|-------------|-------------|---------|
-| Starter (Free) | Last 50 | Last 24 | Last 5 |
-| Pro | All | All | All |
-| Enterprise | All | All | All |
+| Plan | BTC 5m & 15m | BTC 1h & 4h | BTC 24h | ETH (5m, 15m, 1h) | SOL (5m, 15m, 1h) |
+|------|-------------|-------------|---------|-----------|-----------|
+| Starter (Free) | Last 50 | Last 24 | Last 5 | -- | -- |
+| Pro | All | All | All | All | All |
+| Enterprise | All | All | All | All | All |
