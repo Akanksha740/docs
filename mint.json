@@ -66,6 +66,7 @@
     {
       "group": "Guides",
       "pages": [
+        "guides/strategy-replay",
         "guides/rate-limits",
         "guides/pricing",
         "guides/errors"

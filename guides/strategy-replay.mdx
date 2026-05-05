@@ -1,0 +1,118 @@
+---
+title: Strategy Replay
+description: "Replay any past market with your own entry and exit rules"
+---
+
+# Strategy Replay
+
+Strategy Replay lets you pick a resolved Polymarket prediction market and replay it tick-by-tick with your own entry and exit rules applied. Every fill walks the actual historical order book, so PnL, drawdown, slippage, and win rate are computed from real depth, not estimates.
+
+<Note>
+  Strategy Replay is included with **Pro** and **Enterprise** plans. The Starter plan does not include this feature.
+</Note>
+
+## When to use it
+
+- See how a specific entry/exit rule would have played out on a real market
+- Sanity-check a hypothesis like "would buying UP under 0.40 and selling above 0.60 have worked on this market?"
+- Inspect slippage and fill behavior on the actual order book at every tick
+- Build intuition for how prices move through time on a given market type
+
+<Warning>
+  Strategy Replay runs against **one resolved market** at a time. It is not a multi-market backtester. To compare a strategy across many markets, run replays in a loop using the API.
+</Warning>
+
+## Where to find it
+
+Open the [Replay tab](https://polyhistorical.com/replay) in your dashboard, or visit it directly at `polyhistorical.com/replay`.
+
+## Building a strategy
+
+<Steps>
+  <Step title="Pick a market">
+    Choose a coin (BTC, ETH, or SOL), a market type (5m, 15m, 1h, 4h, or 24h), then pick from the list of resolved markets.
+  </Step>
+  <Step title="Choose a side">
+    Buy UP or Buy DOWN. The replay engine fills against the matching order book side.
+  </Step>
+  <Step title="Set position and risk">
+    Set the number of shares and a max-loss percent. If the position drawdown reaches your max-loss, the engine forces an exit.
+  </Step>
+  <Step title="Add entry conditions">
+    Add one or more conditions that must **all** be true to enter. Example: `UP Price < 0.40` AND `Spread < 0.05`.
+  </Step>
+  <Step title="Add exit conditions">
+    Add one or more conditions where **any** triggers an exit. Example: `UP Price >= 0.60` OR `Time Remaining % < 10`.
+  </Step>
+  <Step title="Run replay">
+    Hit Run Replay. The replay streams tick-by-tick at your chosen playback speed (0.5x, 1x, or 2.5x).
+  </Step>
+</Steps>
+
+## Available fields
+
+| Field | Description |
+|-------|-------------|
+| **UP Price** | The probability of UP resolution (0 to 1) |
+| **DOWN Price** | The probability of DOWN resolution (0 to 1) |
+| **Coin Price** | The reference coin price (BTC, ETH, or SOL) at that snapshot |
+| **Spread** | Absolute difference between UP and DOWN price |
+| **Time Remaining %** | Percent of market lifespan remaining (100 at open, 0 at end) |
+
+## Available operators
+
+| Operator | Triggers when |
+|----------|---------------|
+| `<`, `>`, `<=`, `>=`, `=` | Standard numeric comparison |
+| **Crosses Above** | Previous tick was below the value, current tick is at or above |
+| **Crosses Below** | Previous tick was above the value, current tick is at or below |
+
+Crosses operators detect transitions, useful for breakout-style entries.
+
+## Entry vs. exit logic
+
+- **Entry**: ALL of your entry conditions must be true on a tick to enter a position.
+- **Exit**: ANY of your exit conditions, OR a max-loss breach, exits the position.
+- The engine forces an exit on the final tick if you are still in position when the market ends.
+
+## Fills and slippage
+
+When you enter or exit, the engine **walks the actual historical order book** at that tick:
+
+- Buys consume asks from cheapest to most expensive
+- Sells consume bids from highest to lowest
+- The fill price is the size-weighted average of the levels consumed
+- Slippage is reported as `|fill_price - mid_price|`
+
+If your position size exceeds available depth, the engine fills the remainder at the worst level seen. This mirrors what would have happened to a real order had you sized too aggressively for the book.
+
+## Metrics
+
+After each replay, you get:
+
+| Metric | Meaning |
+|--------|---------|
+| **Total PnL** | Realized PnL across all closed trades |
+| **Total PnL %** | Total PnL as a percentage of initial position cost |
+| **Win Rate** | Percent of exits that closed in profit |
+| **Max Drawdown** | Largest peak-to-trough decline in equity during the replay |
+| **Avg Trade** | Average PnL per closed trade |
+| **Best / Worst Trade** | The single most-profitable and most-losing exit |
+| **Slippage** | Per-trade gap between mid price and fill |
+| **Time in Market** | Percent of ticks where a position was held |
+
+## Reading the chart
+
+The replay chart is a stacked three-panel view sharing one time axis:
+
+1. **Probability** — UP or DOWN price line, in-position shading, and entry / exit triangle markers
+2. **Coin Price** — the reference BTC, ETH, or SOL price
+3. **Cumulative PnL** — equity curve filled green or red against a zero baseline
+
+Hover anywhere on the chart for a vertical crosshair and tooltip showing time, probability, coin price, equity, position status, and trade details if you are near an entry or exit.
+
+## Notes and limitations
+
+- Settlement-period snapshots (where both UP and DOWN spike near 1.0) are filtered out so they do not contaminate fills.
+- The replay is deterministic: the same market and strategy will always produce the same result.
+- Strategy Replay only operates on **resolved** markets, so you can compare your strategy's outcome against the known winner.
