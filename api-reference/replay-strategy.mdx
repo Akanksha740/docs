@@ -1,0 +1,267 @@
+---
+title: Replay Strategy
+api: "POST /v1/replay"
+description: "Replay an entry/exit strategy against one resolved market"
+---
+
+# Replay Strategy
+
+Runs a strategy against one resolved historical market, tick by tick. The replay engine evaluates your entry and exit rules against each snapshot, walks the historical order book for fills, and returns trades, PnL, drawdown, slippage, and an equity curve.
+
+<Note>
+  Strategy Replay requires a **Pro**, **Pro Trial**, or **Enterprise** subscription.
+</Note>
+
+## Request
+
+```
+https://api.polyhistorical.com/v1/replay
+```
+
+### Headers
+
+<ParamField header="X-API-Key" type="string" required>
+  Your API key. See [Authentication](/authentication).
+</ParamField>
+
+<ParamField header="Content-Type" type="string" required>
+  Must be `application/json`.
+</ParamField>
+
+### Body parameters
+
+<ParamField body="marketSlug" type="string" required>
+  Slug of a resolved market to replay, e.g. `btc-updown-5m-1774975800`.
+</ParamField>
+
+<ParamField body="side" type="string" required>
+  Outcome token to trade. Allowed values: `UP`, `DOWN`.
+</ParamField>
+
+<ParamField body="entryConditions" type="array" required>
+  Conditions that must **all** be true to enter a position. Each condition contains `field`, `operator`, and `value`.
+</ParamField>
+
+<ParamField body="exitConditions" type="array" required>
+  Conditions where **any** true condition exits the position. Max-loss and market-end exits can also close the position.
+</ParamField>
+
+<ParamField body="positionSize" type="number" required>
+  Number of shares to simulate per trade. Must be between `1` and `10000`.
+</ParamField>
+
+<ParamField body="maxLossPercent" type="number" default="50">
+  Forced-exit drawdown threshold, from `1` to `100` percent. Defaults to `50` when omitted.
+</ParamField>
+
+<ParamField body="orderType" type="string" default="MARKET">
+  Order type for the replay. Allowed values: `MARKET`, `LIMIT`. Defaults to `MARKET` when omitted.
+</ParamField>
+
+### Condition fields
+
+| Field | Description |
+|-------|-------------|
+| `price_up` | UP outcome price at the snapshot |
+| `price_down` | DOWN outcome price at the snapshot |
+| `coin_price` | Reference BTC, ETH, or SOL price at the snapshot |
+| `spread` | Absolute difference between UP and DOWN prices |
+| `time_remaining_pct` | Percent of the market lifespan remaining |
+
+### Condition operators
+
+| Operator | Description |
+|----------|-------------|
+| `<` | Field is less than `value` |
+| `>` | Field is greater than `value` |
+| `<=` | Field is less than or equal to `value` |
+| `>=` | Field is greater than or equal to `value` |
+| `==` | Field equals `value` |
+| `crosses_above` | Previous tick was at or below `value`, current tick is above `value` |
+| `crosses_below` | Previous tick was at or above `value`, current tick is below `value` |
+
+## Response
+
+Replay responses use the standard API wrapper.
+
+<ResponseField name="success" type="boolean">
+  `true` when the replay completed successfully.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Replay result payload.
+</ResponseField>
+
+<ResponseField name="data.market" type="object">
+  Market metadata for the replayed market.
+</ResponseField>
+
+<ResponseField name="data.strategy" type="object">
+  Strategy summary including `side`, `positionSize`, `orderType`, `entryConditionCount`, and `exitConditionCount`.
+</ResponseField>
+
+<ResponseField name="data.performance" type="object">
+  Performance metrics including `total_pnl`, `total_pnl_percent`, `max_drawdown`, `max_drawdown_percent`, `total_trades`, `winning_trades`, `losing_trades`, `win_rate`, `avg_trade_pnl`, `best_trade`, `worst_trade`, `time_in_position_pct`, and `final_market_outcome`.
+</ResponseField>
+
+<ResponseField name="data.trades" type="array">
+  Entry and exit events. Each event includes `type`, `reason`, `time`, `price`, `fill_price`, `shares`, `slippage`, `position_pnl`, `cumulative_pnl`, and `coin_price`.
+</ResponseField>
+
+<ResponseField name="data.pnl_curve" type="array">
+  Sampled equity curve points containing `time`, `pnl`, `unrealized_pnl`, `price`, `coin_price`, and `in_position`.
+</ResponseField>
+
+<ResponseField name="data.total_snapshots" type="integer">
+  Number of historical snapshots evaluated by the replay engine.
+</ResponseField>
+
+<ResponseField name="timestamp" type="string">
+  Response timestamp.
+</ResponseField>
+
+## Example
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST "https://api.polyhistorical.com/v1/replay" \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "marketSlug": "btc-updown-5m-1774975800",
+    "side": "UP",
+    "entryConditions": [
+      { "field": "price_up", "operator": "<", "value": 0.40 },
+      { "field": "spread", "operator": "<", "value": 0.08 }
+    ],
+    "exitConditions": [
+      { "field": "price_up", "operator": ">=", "value": 0.60 },
+      { "field": "time_remaining_pct", "operator": "<", "value": 10 }
+    ],
+    "positionSize": 100,
+    "maxLossPercent": 25,
+    "orderType": "MARKET"
+  }'
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    "https://api.polyhistorical.com/v1/replay",
+    headers={"X-API-Key": API_KEY, "Content-Type": "application/json"},
+    json={
+        "marketSlug": "btc-updown-5m-1774975800",
+        "side": "UP",
+        "entryConditions": [
+            {"field": "price_up", "operator": "<", "value": 0.40},
+            {"field": "spread", "operator": "<", "value": 0.08},
+        ],
+        "exitConditions": [
+            {"field": "price_up", "operator": ">=", "value": 0.60},
+            {"field": "time_remaining_pct", "operator": "<", "value": 10},
+        ],
+        "positionSize": 100,
+        "maxLossPercent": 25,
+        "orderType": "MARKET",
+    },
+)
+```
+
+</CodeGroup>
+
+### Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "market": {
+      "slug": "btc-updown-5m-1774975800",
+      "market_type": "5m",
+      "winner": "Down",
+      "start_time": "2026-03-31T16:50:00Z",
+      "end_time": "2026-03-31T16:55:00Z"
+    },
+    "strategy": {
+      "side": "UP",
+      "positionSize": 100,
+      "orderType": "MARKET",
+      "entryConditionCount": 2,
+      "exitConditionCount": 2
+    },
+    "performance": {
+      "total_pnl": 18.25,
+      "total_pnl_percent": 18.25,
+      "max_drawdown": 4.10,
+      "max_drawdown_percent": 4.10,
+      "total_trades": 1,
+      "winning_trades": 1,
+      "losing_trades": 0,
+      "win_rate": 100.0,
+      "avg_trade_pnl": 18.25,
+      "best_trade": 18.25,
+      "worst_trade": 18.25,
+      "time_in_position_pct": 42.5,
+      "final_market_outcome": "Down"
+    },
+    "trades": [
+      {
+        "type": "ENTRY",
+        "reason": "SIGNAL",
+        "time": "2026-03-31T16:51:12.120Z",
+        "price": 0.39,
+        "fill_price": 0.4025,
+        "shares": 100,
+        "slippage": 0.0125,
+        "position_pnl": 0,
+        "cumulative_pnl": 0,
+        "coin_price": 67688.42
+      },
+      {
+        "type": "EXIT",
+        "reason": "SIGNAL",
+        "time": "2026-03-31T16:53:18.640Z",
+        "price": 0.61,
+        "fill_price": 0.585,
+        "shares": 100,
+        "slippage": 0.025,
+        "position_pnl": 18.25,
+        "cumulative_pnl": 18.25,
+        "coin_price": 67634.10
+      }
+    ],
+    "pnl_curve": [
+      {
+        "time": "2026-03-31T16:51:12.120Z",
+        "pnl": 0,
+        "unrealized_pnl": 0,
+        "price": 0.39,
+        "coin_price": 67688.42,
+        "in_position": true
+      }
+    ],
+    "total_snapshots": 878
+  },
+  "timestamp": "2026-05-23T12:00:00Z"
+}
+```
+
+<Warning>
+  Replays only work on resolved markets. Unresolved markets return `MARKET_NOT_RESOLVED`.
+</Warning>
+
+## Errors
+
+| Code | HTTP Status | Description |
+|------|-------------|-------------|
+| `UNAUTHORIZED` | 401 | Missing or invalid API key |
+| `TIER_REQUIRED` | 403 | Strategy Replay requires Pro, Pro Trial, or Enterprise |
+| `MARKET_NOT_FOUND` | 404 | The market slug does not exist |
+| `MARKET_NOT_RESOLVED` | 400 | The market exists but is not resolved yet |
+| `NO_DATA` | 404 | The market is resolved but has no snapshot data available |
+| `INVALID_SIDE` | 400 | `side` must be `UP` or `DOWN` |
+| `INVALID_FIELD` | 400 | A condition uses an unsupported field |
+| `INVALID_OPERATOR` | 400 | A condition uses an unsupported operator |
+| `INVALID_ORDER_TYPE` | 400 | `orderType` must be `MARKET` or `LIMIT` |

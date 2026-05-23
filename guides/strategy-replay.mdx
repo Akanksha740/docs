@@ -26,6 +26,8 @@ Strategy Replay lets you pick a resolved Polymarket prediction market and replay
 
 Open the [Replay tab](https://polyhistorical.com/replay) in your dashboard, or visit it directly at `polyhistorical.com/replay`.
 
+You can also run replays through the API with [`POST /v1/replay`](/api-reference/replay-strategy). Use the API when you want to loop over many resolved markets, save replay results, or integrate strategy checks into your own research pipeline.
+
 ## Building a strategy
 
 <Steps>
@@ -63,7 +65,7 @@ Open the [Replay tab](https://polyhistorical.com/replay) in your dashboard, or v
 
 | Operator | Triggers when |
 |----------|---------------|
-| `<`, `>`, `<=`, `>=`, `=` | Standard numeric comparison |
+| `<`, `>`, `<=`, `>=`, `==` | Standard numeric comparison |
 | **Crosses Above** | Previous tick was below the value, current tick is at or above |
 | **Crosses Below** | Previous tick was above the value, current tick is at or below |
 
@@ -116,3 +118,4 @@ Hover anywhere on the chart for a vertical crosshair and tooltip showing time, p
 - Settlement-period snapshots (where both UP and DOWN spike near 1.0) are filtered out so they do not contaminate fills.
 - The replay is deterministic: the same market and strategy will always produce the same result.
 - Strategy Replay only operates on **resolved** markets, so you can compare your strategy's outcome against the known winner.
+- API requests require a Pro, Pro Trial, or Enterprise API key and use the same strategy fields and operators documented in [`POST /v1/replay`](/api-reference/replay-strategy).
