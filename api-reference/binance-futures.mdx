@@ -1,0 +1,43 @@
+---
+title: "Binance Futures"
+description: "Binance Futures API endpoints"
+---
+
+# Binance Futures
+
+Use Binance Futures APIs for live BTC, ETH, and SOL USDT-margined futures market data, plus historical BTC/USDT futures depth snapshots captured by PolyHistorical.
+
+<Note>
+  Binance Futures APIs require a **Pro** or **Enterprise** plan and count toward your standard API rate limits.
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="Latest Futures Depth" icon="book-open" href="/api-reference/binance-futures-latest">
+    Latest futures coin price with order book bids and asks.
+  </Card>
+  <Card title="Latest Futures Trade" icon="badge-dollar-sign" href="/api-reference/binance-futures-latest-trade">
+    Most recent trade for a supported futures market.
+  </Card>
+  <Card title="Recent Futures Trades" icon="list" href="/api-reference/binance-futures-trades">
+    Recent public futures trades with configurable limit.
+  </Card>
+  <Card title="Futures Snapshots" icon="camera" href="/api-reference/binance-futures-snapshots">
+    Paginated historical BTC/USDT futures depth snapshots.
+  </Card>
+</CardGroup>
+
+## Supported coins
+
+| Data | Coins |
+|------|-------|
+| Live depth and trades | `btc`, `eth`, `sol` |
+| Historical depth snapshots | `btc` |
+
+## Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/v1/{coin}/future/latest` | [Latest futures depth](/api-reference/binance-futures-latest) |
+| `GET` | `/v1/{coin}/future/trade/latest` | [Latest futures trade](/api-reference/binance-futures-latest-trade) |
+| `GET` | `/v1/{coin}/future/trades` | [Recent futures trades](/api-reference/binance-futures-trades) |
+| `GET` | `/v1/btc/future/snapshots` | [Historical futures snapshots](/api-reference/binance-futures-snapshots) |

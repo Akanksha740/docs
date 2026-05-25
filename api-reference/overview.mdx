@@ -1,9 +1,9 @@
 ---
-title: Overview
-description: "API Reference overview and conventions"
+title: Polymarket
+description: "Polymarket API reference and conventions"
 ---
 
-# API Reference
+# Polymarket APIs
 
 Base URL for all API requests:
 
@@ -19,7 +19,8 @@ All endpoints require an API key passed in the `X-API-Key` header. See [Authenti
 
 - All requests use standard query parameters
 - Responses are JSON
-- Timestamps are ISO 8601 format (UTC)
+- Prediction market timestamps are ISO 8601 format (UTC)
+- Binance trade and snapshot timestamps are UTC epoch milliseconds
 - Pagination uses `limit` and `offset` parameters
 
 ## Response format
@@ -81,6 +82,21 @@ All responses follow this structure:
 | `INTERNAL_ERROR` | 500 | Server error |
 
 ## Endpoints
+
+<CardGroup cols={2}>
+  <Card title="List Markets" icon="list" href="/api-reference/list-markets">
+    Browse active and resolved prediction markets with filtering and pagination.
+  </Card>
+  <Card title="Get Market" icon="search" href="/api-reference/get-market">
+    Fetch one prediction market by slug.
+  </Card>
+  <Card title="Get Snapshots" icon="camera" href="/api-reference/get-snapshots">
+    Read time-series price and order book snapshots by market slug.
+  </Card>
+  <Card title="Replay Strategy" icon="play" href="/api-reference/replay-strategy">
+    Backtest entry and exit rules against resolved historical markets.
+  </Card>
+</CardGroup>
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|

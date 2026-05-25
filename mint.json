@@ -56,12 +56,47 @@
     {
       "group": "API Reference",
       "pages": [
-        "api-reference/overview",
-        "api-reference/list-markets",
-        "api-reference/get-market",
-        "api-reference/get-snapshots",
-        "api-reference/get-snapshots-by-market-id",
-        "api-reference/replay-strategy"
+        {
+          "group": "Polymarket",
+          "expanded": true,
+          "pages": [
+            "api-reference/overview",
+            "api-reference/list-markets",
+            "api-reference/get-market",
+            "api-reference/get-snapshots",
+            "api-reference/get-snapshots-by-market-id",
+            "api-reference/replay-strategy"
+          ]
+        },
+        {
+          "group": "Binance Spot",
+          "expanded": true,
+          "pages": [
+            "api-reference/binance-spot",
+            "api-reference/binance-spot-latest",
+            "api-reference/binance-spot-latest-trade",
+            "api-reference/binance-spot-trades",
+            "api-reference/binance-spot-snapshots"
+          ]
+        },
+        {
+          "group": "Binance Futures",
+          "expanded": true,
+          "pages": [
+            "api-reference/binance-futures",
+            "api-reference/binance-futures-latest",
+            "api-reference/binance-futures-latest-trade",
+            "api-reference/binance-futures-trades",
+            "api-reference/binance-futures-snapshots"
+          ]
+        },
+        {
+          "group": "Utility",
+          "expanded": true,
+          "pages": [
+            "api-reference/api-status"
+          ]
+        }
       ]
     },
     {

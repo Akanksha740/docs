@@ -26,6 +26,19 @@ Every API response includes rate limit headers:
 | `X-RateLimit-Reset` | Unix timestamp when the limit resets (midnight UTC) |
 | `X-Tier` | Your current plan tier |
 
+<Note>
+  Binance Spot and Binance Futures endpoints are available on Pro and Enterprise plans only, and are tracked against the same plan rate limits as the rest of the API.
+</Note>
+
+## Feature access by plan
+
+| Feature | Starter (Free) | Pro | Enterprise |
+|---------|----------------|-----|------------|
+| Polymarket BTC markets | Limited recent markets | Included | Included |
+| Polymarket ETH and SOL markets | -- | Included | Included |
+| Binance Spot APIs | -- | Included | Included |
+| Binance Futures APIs | -- | Included | Included |
+
 ## Handling 429 responses
 
 When you exceed the rate limit, the API returns a `429 Too Many Requests` status with a `Retry-After` header.

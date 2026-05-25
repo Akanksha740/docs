@@ -1,0 +1,63 @@
+---
+title: "Latest Futures Trade"
+api: "GET /v1/{coin}/future/trade/latest"
+description: "Get the latest Binance Futures trade"
+---
+
+# Latest Futures Trade
+
+Returns the most recent Binance Futures trade for a supported coin.
+
+<Note>
+  Requires a **Pro** or **Enterprise** plan.
+</Note>
+
+## Request
+
+```
+https://api.polyhistorical.com/v1/{coin}/future/trade/latest
+```
+
+### Headers
+
+<ParamField header="X-API-Key" type="string" required>
+  Your API key. See [Authentication](/authentication).
+</ParamField>
+
+### Path parameters
+
+<ParamField path="coin" type="string" required>
+  Coin symbol. Supported values: `btc`, `eth`, `sol`.
+</ParamField>
+
+## Response
+
+<ResponseField name="data.id" type="integer">Binance trade ID.</ResponseField>
+<ResponseField name="data.price" type="number">Trade price rounded to 2 decimal places.</ResponseField>
+<ResponseField name="data.qty" type="number">Base quantity rounded to 5 decimal places.</ResponseField>
+<ResponseField name="data.quoteQty" type="number">Quote quantity rounded to 5 decimal places.</ResponseField>
+<ResponseField name="data.time" type="integer">Trade timestamp in UTC epoch milliseconds.</ResponseField>
+<ResponseField name="data.isBuyerMaker" type="boolean">Whether the buyer was the maker.</ResponseField>
+
+## Example
+
+```bash cURL
+curl -H "X-API-Key: YOUR_API_KEY" \
+  "https://api.polyhistorical.com/v1/btc/future/trade/latest"
+```
+
+### Response
+
+```json
+{
+  "data": {
+    "id": 123456789,
+    "price": 77593.69,
+    "qty": 0.00123,
+    "quoteQty": 95.44123,
+    "time": 1779730000000,
+    "isBuyerMaker": false
+  }
+}
+```
+

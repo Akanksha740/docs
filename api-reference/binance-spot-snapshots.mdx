@@ -1,0 +1,82 @@
+---
+title: "Spot Snapshots"
+api: "GET /v1/btc/spot/snapshots"
+description: "Get paginated historical Binance Spot BTC/USDT depth snapshots"
+---
+
+# Spot Snapshots
+
+Returns paginated historical Binance Spot BTC/USDT depth snapshots captured by PolyHistorical.
+
+<Note>
+  Requires a **Pro** or **Enterprise** plan. Historical spot snapshots are currently available for BTC/USDT.
+</Note>
+
+## Request
+
+```
+https://api.polyhistorical.com/v1/btc/spot/snapshots
+```
+
+### Headers
+
+<ParamField header="X-API-Key" type="string" required>
+  Your API key. See [Authentication](/authentication).
+</ParamField>
+
+### Query parameters
+
+<ParamField query="limit" type="integer" default="100">
+  Number of snapshots to return (1-1000).
+</ParamField>
+
+<ParamField query="offset" type="integer" default="0">
+  Pagination offset.
+</ParamField>
+
+<ParamField query="start_time" type="integer">
+  Filter snapshots from this UTC epoch timestamp in milliseconds.
+</ParamField>
+
+<ParamField query="end_time" type="integer">
+  Filter snapshots up to this UTC epoch timestamp in milliseconds.
+</ParamField>
+
+## Response
+
+<ResponseField name="data" type="array">Paginated list of snapshot objects.</ResponseField>
+<ResponseField name="total" type="integer">Total snapshots matching the filters.</ResponseField>
+<ResponseField name="limit" type="integer">Requested result limit.</ResponseField>
+<ResponseField name="offset" type="integer">Current pagination offset.</ResponseField>
+
+## Example
+
+```bash cURL
+curl -H "X-API-Key: YOUR_API_KEY" \
+  "https://api.polyhistorical.com/v1/btc/spot/snapshots?limit=100&offset=0"
+```
+
+### Response
+
+```json
+{
+  "data": [
+    {
+      "symbol": "BTCUSDT",
+      "time_epoch_ms": 1779730000000,
+      "coin_price": 77593.69,
+      "bids": [
+        { "price": 77593.68, "quantity": 0.64379 }
+      ],
+      "asks": [
+        { "price": 77593.70, "quantity": 0.20000 }
+      ],
+      "last_update_id": 94228633307
+    }
+  ],
+  "total": 12345,
+  "limit": 100,
+  "offset": 0
+}
+```
+

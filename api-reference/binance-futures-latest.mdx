@@ -1,0 +1,69 @@
+---
+title: "Latest Futures Depth"
+api: "GET /v1/{coin}/future/latest"
+description: "Get the latest Binance Futures price and order book depth"
+---
+
+# Latest Futures Depth
+
+Returns the latest Binance Futures coin price with order book bids and asks.
+
+<Note>
+  Requires a **Pro** or **Enterprise** plan.
+</Note>
+
+## Request
+
+```
+https://api.polyhistorical.com/v1/{coin}/future/latest
+```
+
+### Headers
+
+<ParamField header="X-API-Key" type="string" required>
+  Your API key. See [Authentication](/authentication).
+</ParamField>
+
+### Path parameters
+
+<ParamField path="coin" type="string" required>
+  Coin symbol. Supported values: `btc`, `eth`, `sol`.
+</ParamField>
+
+## Response
+
+<ResponseField name="data.coin_price" type="number">
+  Current futures coin price rounded to 2 decimal places.
+</ResponseField>
+
+<ResponseField name="data.bids" type="array">
+  Bid levels. Each item contains `price` rounded to 2 decimal places and `quantity` rounded to 5 decimal places.
+</ResponseField>
+
+<ResponseField name="data.asks" type="array">
+  Ask levels. Each item contains `price` rounded to 2 decimal places and `quantity` rounded to 5 decimal places.
+</ResponseField>
+
+## Example
+
+```bash cURL
+curl -H "X-API-Key: YOUR_API_KEY" \
+  "https://api.polyhistorical.com/v1/btc/future/latest"
+```
+
+### Response
+
+```json
+{
+  "data": {
+    "coin_price": 77593.69,
+    "bids": [
+      { "price": 77593.68, "quantity": 0.64379 }
+    ],
+    "asks": [
+      { "price": 77593.70, "quantity": 0.20000 }
+    ]
+  }
+}
+```
+

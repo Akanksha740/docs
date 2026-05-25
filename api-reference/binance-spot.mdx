@@ -1,0 +1,44 @@
+---
+title: "Binance Spot"
+description: "Binance Spot API endpoints"
+---
+
+# Binance Spot
+
+Use Binance Spot APIs for live BTC, ETH, and SOL spot market data, plus historical BTC/USDT depth snapshots captured by PolyHistorical.
+
+<Note>
+  Binance Spot APIs require a **Pro** or **Enterprise** plan and count toward your standard API rate limits.
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="Latest Spot Depth" icon="book-open" href="/api-reference/binance-spot-latest">
+    Latest coin price with order book bids and asks.
+  </Card>
+  <Card title="Latest Spot Trade" icon="badge-dollar-sign" href="/api-reference/binance-spot-latest-trade">
+    Most recent trade for a supported spot market.
+  </Card>
+  <Card title="Recent Spot Trades" icon="list" href="/api-reference/binance-spot-trades">
+    Recent public trades with configurable limit.
+  </Card>
+  <Card title="Spot Snapshots" icon="camera" href="/api-reference/binance-spot-snapshots">
+    Paginated historical BTC/USDT spot depth snapshots.
+  </Card>
+</CardGroup>
+
+## Supported coins
+
+| Data | Coins |
+|------|-------|
+| Live depth and trades | `btc`, `eth`, `sol` |
+| Historical depth snapshots | `btc` |
+
+## Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/v1/{coin}/spot/latest` | [Latest spot depth](/api-reference/binance-spot-latest) |
+| `GET` | `/v1/{coin}/spot/trade/latest` | [Latest spot trade](/api-reference/binance-spot-latest-trade) |
+| `GET` | `/v1/{coin}/spot/trades` | [Recent spot trades](/api-reference/binance-spot-trades) |
+| `GET` | `/v1/btc/spot/snapshots` | [Historical spot snapshots](/api-reference/binance-spot-snapshots) |
+

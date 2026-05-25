@@ -1,0 +1,39 @@
+---
+title: "API Status"
+api: "GET /actuator/health"
+description: "Check PolyHistorical API health"
+---
+
+# API Status
+
+Use the health check endpoint to verify that the PolyHistorical API is reachable. This endpoint is useful for uptime monitoring, deployment checks, and client-side service readiness checks.
+
+## Request
+
+```
+https://api.polyhistorical.com/actuator/health
+```
+
+### Authentication
+
+This endpoint does not require an API key.
+
+## Response
+
+<ResponseField name="status" type="string">
+  Current API health status. `UP` means the API is available.
+</ResponseField>
+
+## Example
+
+```bash cURL
+curl "https://api.polyhistorical.com/actuator/health"
+```
+
+### Response
+
+```json
+{
+  "status": "UP"
+}
+```
