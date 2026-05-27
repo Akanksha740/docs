@@ -5,7 +5,7 @@ description: "Binance Spot API endpoints"
 
 # Binance Spot
 
-Use Binance Spot APIs for live BTC, ETH, and SOL spot market data, plus historical BTC/USDT depth snapshots captured by PolyHistorical.
+Use Binance Spot APIs for historical order book data, trades, and BTC/USDT depth snapshots captured by PolyHistorical.
 
 <Note>
   Binance Spot APIs require a **Pro** or **Enterprise** plan and count toward your standard API rate limits.
@@ -30,7 +30,7 @@ Use Binance Spot APIs for live BTC, ETH, and SOL spot market data, plus historic
 
 | Data | Coins |
 |------|-------|
-| Live depth and trades | `btc`, `eth`, `sol` |
+| Historical order book and trades | `btc`, `eth`, `sol` |
 | Historical depth snapshots | `btc` |
 
 ## Endpoints
@@ -41,4 +41,3 @@ Use Binance Spot APIs for live BTC, ETH, and SOL spot market data, plus historic
 | `GET` | `/v1/{coin}/spot/trade/latest` | [Latest spot trade](/api-reference/binance-spot-latest-trade) |
 | `GET` | `/v1/{coin}/spot/trades` | [Recent spot trades](/api-reference/binance-spot-trades) |
 | `GET` | `/v1/btc/spot/snapshots` | [Historical spot snapshots](/api-reference/binance-spot-snapshots) |
-
