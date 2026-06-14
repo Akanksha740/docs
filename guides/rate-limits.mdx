@@ -38,6 +38,19 @@ Every API response includes rate limit headers:
 | Polymarket ETH and SOL markets | -- | Included | Included |
 | Binance Spot APIs | -- | Included | Included |
 | Binance Futures APIs | -- | Included | Included |
+| Backtest AI Agent BETA | -- | Free beta, 5 strategy generations/month | Included |
+
+## Backtest AI Agent BETA quota
+
+Backtest AI Agent BETA is tier-gated separately from the standard data API rate limits:
+
+| Plan | Backtest AI Agent quota |
+|------|-------------------------|
+| Starter (Free) | Not included |
+| Pro | Free beta, 5 strategy generations/month |
+| Enterprise | Included |
+
+Calls to `POST /v1/backtest-ai/generate` and `POST /v1/backtest-ai/strategy` consume the monthly Backtest AI Agent quota. Running an already-generated strategy with `POST /v1/backtest-ai/run` does not generate a new strategy.
 
 ## Handling 429 responses
 

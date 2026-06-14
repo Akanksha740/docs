@@ -96,6 +96,9 @@ All responses follow this structure:
   <Card title="Replay Strategy" icon="play" href="/api-reference/replay-strategy">
     Backtest entry and exit rules against resolved historical markets.
   </Card>
+  <Card title="Backtest AI Agent BETA" icon="sparkles" href="/api-reference/backtest-ai-agent">
+    Generate replay-ready strategies from natural language and test them across resolved markets.
+  </Card>
 </CardGroup>
 
 | Method | Endpoint | Description |
@@ -105,3 +108,7 @@ All responses follow this structure:
 | `GET` | `/v1/markets/{slug}/snapshots` | [Get snapshots](/api-reference/get-snapshots) for a market |
 | `GET` | `/v1/markets/by-market-id/{marketId}/snapshots` | [Get snapshots by market ID](/api-reference/get-snapshots-by-market-id) using Polymarket market ID |
 | `POST` | `/v1/replay` | [Replay a strategy](/api-reference/replay-strategy) against a resolved market |
+| `POST` | `/v1/backtest-ai/generate` | [Generate a Backtest AI Agent strategy](/api-reference/backtest-ai-agent) |
+| `POST` | `/v1/backtest-ai/strategy` | Generate and backtest a Backtest AI Agent strategy |
+| `POST` | `/v1/backtest-ai/run` | Run a generated Backtest AI Agent strategy |
+| `GET` | `/v1/backtest-ai/quota` | Get Backtest AI Agent monthly quota |
