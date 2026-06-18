@@ -65,8 +65,7 @@
             "api-reference/get-market",
             "api-reference/get-snapshots",
             "api-reference/get-snapshots-by-market-id",
-            "api-reference/replay-strategy",
-            "api-reference/backtest-ai-agent"
+            "api-reference/replay-strategy"
           ]
         },
         {
